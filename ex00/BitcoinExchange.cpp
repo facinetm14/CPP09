@@ -100,52 +100,30 @@ int	BitcoinExchange::is_valid_input( const std::string & input_line, std::string
 {
 	size_t	delim, date_sep1, date_sep2;
 	std::string year, m, d;
-	delim = input_line.find('|');
-	int	tmp;
 
-	if (delim != std::string::npos)
-	{
-		if (input_line[delim - 1] != ' ' || input_line[delim + 1] != ' ')
-			return BAD_INPUT;
-		date_sep1 = input_line.find('-');
-		if (date_sep1 != std::string::npos)
-		{
-			year = input_line.substr(0, date_sep1);
-			if (year.size() != 4)
-				return BAD_INPUT;
-			if (std::atoi(year.c_str()) <= 0)
-				return BAD_INPUT;
-			date_sep2 = input_line.find('-', date_sep1 + 1);
-			if (date_sep2 == std::string::npos)
-				return BAD_INPUT;
-			m = input_line.substr(date_sep1 + 1, date_sep2 - (date_sep1 + 1));
-			if (m.size() != 2)
-				return BAD_INPUT;
-			tmp = std::atoi(m.c_str());
-			if (tmp <= 0 || tmp > 12)
-				return BAD_INPUT;
-			d = input_line.substr(date_sep2 + 1, delim - 1 - (date_sep2 + 1));
-			if (d.size() !=  2)
-				return BAD_INPUT;
-			tmp = std::atoi(d.c_str());
-			if (tmp <= 0 || tmp > 31)
-				return BAD_INPUT;
-			input_date = input_line.substr(0, delim - 1);
-			*input_nb_btc = std::atof(input_line.substr(delim + 2).c_str());
-			if (*input_nb_btc > 1000.0)
-				return TOO_LARGE;
-			if (*input_nb_btc == 0.0)
-				return BAD_INPUT;
-			if (*input_nb_btc < 0.0)
-				return NOT_POSITVE;
-		}
-		else
-			return BAD_INPUT;
-	}
-	else
+	delim = input_line.find('|');
+	if (delim == std::string::npos)
 		return BAD_INPUT;
-	//input_line;
-	return VALID_INPUT;
+	if (input_line[delim - 1] != ' ' || input_line[delim + 1] != ' ')
+			return BAD_INPUT;
+	date_sep1 = input_line.find('-');
+	if (date_sep1 == std::string::npos)
+		return BAD_INPUT;
+	year = input_line.substr(0, date_sep1);
+	if (!this->is_valid_year(year))
+		return BAD_INPUT;
+	date_sep2 = input_line.find('-', date_sep1 + 1);
+	if (date_sep2 == std::string::npos)
+		return BAD_INPUT;
+	m = input_line.substr(date_sep1 + 1, date_sep2 - (date_sep1 + 1));
+	if (!this->is_valid_month(m))
+		return BAD_INPUT;
+	d = input_line.substr(date_sep2 + 1, delim - 1 - (date_sep2 + 1));
+	if (!this->is_valid_day(d))
+		return BAD_INPUT;
+	input_date = input_line.substr(0, delim - 1);
+	*input_nb_btc = std::atof(input_line.substr(delim + 2).c_str());
+	return (this->is_valid_input_nb_btc(*input_nb_btc));
 }
 
 double	BitcoinExchange::get_value(const std::string & input_date) const
@@ -157,6 +135,50 @@ double	BitcoinExchange::get_value(const std::string & input_date) const
 	it = BitcoinExchange::db_btc.upper_bound(input_date);
 	--it;
 	return it->second;
+}
+
+bool	BitcoinExchange::is_valid_year(const std::string & year) const
+{
+	if (year.size() != 4)
+		return false;
+	if (std::atoi(year.c_str()) <= 0)
+		return false;
+	return true;
+}
+
+bool	BitcoinExchange::is_valid_month(const std::string & month) const
+{
+	int	tmp;
+
+	if (month.size() != 2)
+		return false;
+	tmp = std::atoi(month.c_str());
+	if (tmp <= 0 || tmp > 12)
+		return false;
+	return true;
+}
+
+bool	BitcoinExchange::is_valid_day(const std::string & day) const
+{
+	int	tmp;
+
+	if (day.size() !=  2)
+		return false;
+	tmp = std::atoi(day.c_str());
+	if (tmp <= 0 || tmp > 31)
+		return false;
+	return true;
+}
+
+int		BitcoinExchange::is_valid_input_nb_btc(double input_nb_btc) const
+{
+	if (input_nb_btc > 1000.0)
+		return TOO_LARGE;
+	if (input_nb_btc == 0.0)
+		return BAD_INPUT;
+	if (input_nb_btc < 0.0)
+		return NOT_POSITVE;
+	return VALID_INPUT;
 }
 
 BitcoinExchange::BitcoinExchange(void) {}

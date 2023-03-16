@@ -39,6 +39,10 @@ class BitcoinExchange {
 		void			display_exchange(const std::string & infile) const;
 		int				is_valid_input( const std::string & input_line, std::string & input_date,\
 										double* input_nb_btc ) const;
+		bool			is_valid_year(const std::string & year) const;
+		bool			is_valid_month(const std::string & month) const;
+		bool			is_valid_day(const std::string & day) const;
+		int				is_valid_input_nb_btc(double input_nb_btc) const;
 	
 	public:
 		BitcoinExchange(void);
