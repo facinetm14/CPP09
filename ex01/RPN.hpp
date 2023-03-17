@@ -10,9 +10,9 @@
 class RPN {
 
 	private:
-		std::stack<int> result;
+		std::stack<double> result;
 		bool	is_operation(char c);
-		void	operate(int op1, int op2, char opt);
+		void	operate(double op1, double op2, char opt);
 		void 	operate_unaire(char opt);
 
 	public:

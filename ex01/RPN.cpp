@@ -6,9 +6,9 @@ RPN::~RPN() {}
 
 void	RPN::execute_operation(char* expr)
 {
-	int			operand_1, operand_2, opr, i, tmp_len;
+	double			operand_1, operand_2, opr;
 	char		tmp[11];
-	
+	int			i, tmp_len;
 	if (!expr)
 	{
 		std::cout << "ERROR\n";
@@ -37,14 +37,12 @@ void	RPN::execute_operation(char* expr)
 		{
 			if (this->result.size() >= 2)
 			{
-				operand_1 = this->result.top();
-				this->result.pop();
 				operand_2 = this->result.top();
+				this->result.pop();
+				operand_1 = this->result.top();
 				this->result.pop();
 				this->operate(operand_1, operand_2, expr[i]);
 			}
-			else if (this->result.size() == 1)
-				this->operate_unaire(expr[i]);
 			else
 			{
 				std::cout << "ERROR\n";
@@ -58,7 +56,13 @@ void	RPN::execute_operation(char* expr)
 			return ;
 		}
 	}
-	std::cout << this->result.top() << "\n";
+	i--;
+	while (expr[i] == ' ')
+		i--;
+	if (!is_operation(expr[i]))
+		std::cout << "Error\n";
+	else
+		std::cout << this->result.top() << "\n";
 }
 
 bool	RPN::is_operation(char c)
@@ -70,31 +74,17 @@ bool	RPN::is_operation(char c)
 	return false;
 }
 
-void RPN::operate(int op1, int op2, char opt)
+void RPN::operate(double op1, double op2, char opt)
 {
-	int tmp_result;
+	double tmp_result;
 
 	if (opt == '+')
 		tmp_result = op1 + op2;
 	else if (opt == '-')
 		tmp_result = op2 - op1;
 	else if (opt == '/')
-		tmp_result = op2 / op1;
+		tmp_result = op1 / op2;
 	else if (opt == '*')
 		tmp_result = op1 * op2;
-	this->result.push(tmp_result);
-}
-
-void RPN::operate_unaire(char opt)
-{
-	int tmp_result;
-	int operand;
-
-	operand = this->result.top();
-	this->result.pop();
-	if (opt == '-')
-		tmp_result = operand * (-1);
-	else
-		tmp_result = operand;
 	this->result.push(tmp_result);
 }
