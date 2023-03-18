@@ -86,8 +86,6 @@ class	PmergeMe {
 			for (int i = (int)(pairs.size() - 1); i >= 0; --i)
 			{
 				vec.push_back(pairs[i][0]);
-				std::cout << pairs[i][0] << " - ";
-				std::cout << pairs[i][1] << "\n";
 			}
 			for (size_t i = 0; i < pairs.size(); ++i)
 			{
