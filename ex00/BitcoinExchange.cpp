@@ -133,7 +133,8 @@ double	BitcoinExchange::get_value(const std::string & input_date) const
 	if (it != BitcoinExchange::db_btc.end())
 		return it->second;
 	it = BitcoinExchange::db_btc.upper_bound(input_date);
-	--it;
+	if (it != db_btc.begin())
+		--it;
 	return it->second;
 }
 

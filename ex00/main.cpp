@@ -14,7 +14,7 @@
 
 int	main(int argc, char*argv[])
 {
-	std::string db_path = "../cpp_09/data.csv";
+	std::string db_path = "./data.csv";
 	if (argc != 2)
 	{
 		std::cout << "Error: could not open file.\n";
