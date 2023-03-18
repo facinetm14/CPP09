@@ -21,6 +21,6 @@ int	main(int argc, char** argv)
 	}
 
 	PmergeMe p_merg_me;
-	p_merg_me.merge_me(argv, argc - 1);
+	p_merg_me.merge_me(argv, argc);
 	return (0);
 }
