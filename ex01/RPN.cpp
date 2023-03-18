@@ -37,9 +37,9 @@ void	RPN::execute_operation(char* expr)
 		{
 			if (this->result.size() >= 2)
 			{
-				operand_2 = this->result.top();
-				this->result.pop();
 				operand_1 = this->result.top();
+				this->result.pop();
+				operand_2 = this->result.top();
 				this->result.pop();
 				this->operate(operand_1, operand_2, expr[i]);
 			}
@@ -83,7 +83,7 @@ void RPN::operate(double op1, double op2, char opt)
 	else if (opt == '-')
 		tmp_result = op2 - op1;
 	else if (opt == '/')
-		tmp_result = op1 / op2;
+		tmp_result = op2 / op1;
 	else if (opt == '*')
 		tmp_result = op1 * op2;
 	this->result.push(tmp_result);
